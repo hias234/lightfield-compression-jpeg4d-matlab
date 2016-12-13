@@ -1,5 +1,7 @@
 function compressed_block = compress_block4d(block4d)
 % compresses a 4d-block 
+% right now the block4d has to have a size of 64 - this should be
+% adaptable!!! - DOMINIK :)
     
     block2d = map4dTo2d(block4d); %map 4d-block to 2d
     block2d = double(block2d); % convert uint8 types to double
@@ -22,11 +24,7 @@ function compressed_block = compress_block4d(block4d)
     block2d_quantized = block2d_dct ./ QX; % quantize dct-coefficients using the quantization matrix
     
     % TODO shorten output
-    
-    if block2d_quantized(1,1) > 127 || block2d_quantized(1,1) < -127
-        disp(block2d_quantized(1,1))
-    end
-    
+        
     compressed_block = block2d_quantized(:)';
     compressed_block = int8(round(compressed_block));
     
