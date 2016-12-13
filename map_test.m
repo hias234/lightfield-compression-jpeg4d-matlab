@@ -18,4 +18,4 @@ disp(block2d)
 block4d_dc = map2dTo4d(block2d, 4, 4, 2, 2);
 disp(size(block4d))
 disp(size(block4d_dc))
-disp(block4d_dc - block4d)
+disp(double(block4d_dc) - double(block4d))
