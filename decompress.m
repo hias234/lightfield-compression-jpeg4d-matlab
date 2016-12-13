@@ -3,10 +3,9 @@ function decompressed = decompress(compressed, T,S,c,U,V)
 
     blocksize_st = 4;
     blocksize_uv = 2;
-    
     blocksize = blocksize_st*blocksize_st*blocksize_uv*blocksize_uv;
     
-    decompressed = zeros(T,S,c,U,V);
+    decompressed = zeros(T,S,c,U,V,'uint8');
     
     index = 1;
     for color=1:c

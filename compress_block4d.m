@@ -4,7 +4,7 @@ function compressed_block = compress_block4d(block4d)
     block2d = map4dTo2d(block4d); %map 4d-block to 2d
     block2d = double(block2d); % convert uint8 types to double
     
-    % TODO subtract 128???
+    block2d = block2d - 128; % shift mean to zero
     
     % Standard JPEG quantization matrix
     Q50 = double([  16 11 10 16 24 40 51 61;
@@ -23,7 +23,11 @@ function compressed_block = compress_block4d(block4d)
     
     % TODO shorten output -> convert to uint8
     
+    if block2d_quantized(1,1) > 255
+        disp(block2d_quantized(1,1))
+    end
+    
     compressed_block = block2d_quantized(:)';
-    compressed_block = round(compressed_block); % this may have to be a conversion to uint8
+    compressed_block = int8(round(compressed_block));
     
 end

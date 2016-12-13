@@ -9,15 +9,10 @@ LF = ImportLF('./lightfields/legoknights-small_17x17/',17,[1,1],0.25);
 
 clc;
 compressed_lf = compress(LF);
-
-%%
-
 LF_dec = decompress(compressed_lf, T, S, c, U, V);
-LF_dec = cast(LF_dec, 'uint8');
-
-%%
 
 %max(max(max(max(max(LF-LF_dec)))))
+nnz(compressed_lf)
 
 im = RenderLF(LF_dec,0.25,2,-7,-7); 
 figure,imshow(im);

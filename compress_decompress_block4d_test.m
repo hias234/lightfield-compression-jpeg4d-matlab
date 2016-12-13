@@ -17,4 +17,4 @@ disp(compressed)
 decompressed = decompress_block4d(compressed);
 disp(decompressed)
 
-disp(double(block4d) - decompressed)
+disp(double(block4d) - double(decompressed))
