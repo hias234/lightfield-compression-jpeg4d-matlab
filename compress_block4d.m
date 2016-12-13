@@ -21,9 +21,9 @@ function compressed_block = compress_block4d(block4d)
     block2d_dct = dct2(block2d); % apply a 2-dimensional dct-transformation
     block2d_quantized = block2d_dct ./ QX; % quantize dct-coefficients using the quantization matrix
     
-    % TODO shorten output -> convert to uint8
+    % TODO shorten output
     
-    if block2d_quantized(1,1) > 255
+    if block2d_quantized(1,1) > 127 || block2d_quantized(1,1) < -127
         disp(block2d_quantized(1,1))
     end
     
