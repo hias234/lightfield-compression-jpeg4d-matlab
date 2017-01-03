@@ -22,5 +22,5 @@ function decompressed_block = decompress_block4d(block1d)
     block2d_idct = block2d_idct + 128; % reverse the shift done in compress
     
     decompressed_block = map2dTo4d(block2d_idct, 4, 4, 2, 2); % TODO dimensions are hard coded...
-    decompressed_block = uint8(decompressed_block);
+    decompressed_block = uint8(decompressed_block); % TODO maybe round before - has to be tested...
 end
