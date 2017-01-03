@@ -23,3 +23,4 @@ title('image rendered from lightfield');
 im2 = RenderLF(LF,0.25,2,-7,-7); 
 figure,imshow(im2);
 title('image rendered from lightfield');
+
