@@ -1,4 +1,4 @@
-function compressed = compress(LF)
+function [compressed, huffdict] = compress(LF)
 % compresses a lightfield :)
 
     % size of lightfield (dimension order as it is being loaded: S,T,c,U,V
@@ -35,4 +35,5 @@ function compressed = compress(LF)
         end
     end
 
+    [compressed, huffdict] = huffman_encode(compressed);
 end
