@@ -1,7 +1,8 @@
 function decompressed_block = decompress_block4d(block1d)
 % decompresses a 4d-block 
 
-    block2d = reshape(block1d, [8,8]); % TODO this may needs to be changed... DOMINIK
+    % block2d = reshape(block1d, [8,8]); % TODO this may needs to be changed... DOMINIK
+    block2d = zig_zag_decode(block1d);
     block2d = double(block2d);
     
     % Standard JPEG quantization matrix

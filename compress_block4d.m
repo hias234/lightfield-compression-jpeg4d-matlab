@@ -23,9 +23,8 @@ function compressed_block = compress_block4d(block4d)
     block2d_dct = dct2(block2d); % apply a 2-dimensional dct-transformation
     block2d_quantized = block2d_dct ./ QX; % quantize dct-coefficients using the quantization matrix
     
-    % TODO shorten output (zig-zag)
-        
-    compressed_block = block2d_quantized(:)';
-    compressed_block = int8(round(compressed_block));
+    block2d_zigzag = zig_zag_encode(block2d_quantized);
+   
+    compressed_block = int8(round(block2d_zigzag));
     
 end

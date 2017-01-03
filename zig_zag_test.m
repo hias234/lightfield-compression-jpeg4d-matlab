@@ -1,3 +1,4 @@
+clc;
 
 test_mat = [    16 11 10 16 24 40 51 61;
                 12 12 14 19 26 58 60 55;
@@ -11,3 +12,8 @@ test_mat = [    16 11 10 16 24 40 51 61;
                
 test_output = zig_zag_encode(test_mat);
 disp(test_output)
+
+dec = zig_zag_decode(test_output);
+disp(dec)
+
+isequal(dec, test_mat)

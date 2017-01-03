@@ -1,18 +1,16 @@
-function shortened_block1d = zig_zag_encode(block2d)
-%ZIG_ZAG_ENCODE encodes a 2d-block with the zig-zag pattern
+function output_block2d = zig_zag_decode(input_block1d)
+%ZIG_ZAG_DECODE zig-zag-decodes the args
 %   Detailed explanation goes here
 
-block1d = block2d(:)';
-
-len1d = sqrt(length(block1d));
+len1d = sqrt(length(input_block1d));
 
 row = 2;
 col = 0;
 
 dir = -1;
-shortened_block1d = zeros(length(block1d));
+output_block2d = zeros(len1d,len1d);
 
-for pos=1:length(block1d)
+for pos=1:length(input_block1d)
     
     row = row + dir;
     col = col - dir;
@@ -24,7 +22,7 @@ for pos=1:length(block1d)
     
     if row > len1d
         row = len1d;
-        if pos > length(block1d) / 2
+        if pos > length(input_block1d) / 2
             col = min(col + 2, len1d);
         end
         
@@ -38,16 +36,14 @@ for pos=1:length(block1d)
     
     if col > len1d
         col = len1d;
-        if pos > length(block1d) / 2
+        if pos > length(input_block1d) / 2
             row = min(row + 2, len1d);
         end
         dir = -dir;
     end
     
-    shortened_block1d(pos) = block2d(row,col);
+    output_block2d(row,col) = input_block1d(pos);
 end
-
-shortened_block1d = shortened_block1d(1:64);
 
 end
 
