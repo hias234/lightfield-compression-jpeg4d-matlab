@@ -1,6 +1,7 @@
-function decompressed = decompress(compressed, T,S,c,U,V)
+function decompressed = decompress(compressed, huffdict, T,S,c,U,V)
 % decompresses a lightfield :)
-
+    compressed = huffmandeco(compressed, huffdict);
+    
     blocksize_st = 4;
     blocksize_uv = 2;
     blocksize = blocksize_st*blocksize_st*blocksize_uv*blocksize_uv;
