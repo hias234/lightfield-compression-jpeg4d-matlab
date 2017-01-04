@@ -1,7 +1,9 @@
-function [compressed, huffdict] = compress(LF)
+function [compressed, huffdict] = compress(LF, useYuvConversion, useHuffman)
 % compresses a lightfield :)
     
-    LF = lfRgbToYuv(LF);
+    if useYuvConversion
+        LF = lfRgbToYuv(LF);
+    end
     % size of lightfield (dimension order as it is being loaded: S,T,c,U,V
     [T,S,c,U,V] = size(LF);
 
@@ -35,6 +37,10 @@ function [compressed, huffdict] = compress(LF)
             end
         end
     end
-    huffdict = 0;
-    %[compressed, huffdict] = huffman_encode(compressed);
+    
+    if useHuffman
+        [compressed, huffdict] = huffman_encode(compressed);
+    else
+        huffdict = 0;
+    end
 end

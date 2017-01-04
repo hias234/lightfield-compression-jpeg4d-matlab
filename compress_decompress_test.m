@@ -8,11 +8,11 @@ LF = ImportLF('./lightfields/legoknights-small_17x17/',17,[1,1],0.10);
 %% compress
 
 clc;
-[compressed_lf, huffdict] = compress(LF);
+[compressed_lf, huffdict] = compress(LF, false, false);
 disp('compressed')
 %% decompress
 
-LF_dec = decompress(compressed_lf, huffdict, T, S, c, U, V);
+LF_dec = decompress(compressed_lf, huffdict, T, S, c, U, V, false, false);
 disp('decompressed')
 
 max(max(max(max(max(LF-LF_dec)))))
@@ -20,7 +20,7 @@ nnz(compressed_lf)
 
 im = RenderLF(LF_dec,0.25,2,-7,-7); 
 figure,imshow(im);
-title('image rendered from lightfield');com
+title('image rendered from lightfield');
 
 im2 = RenderLF(LF,0.25,2,-7,-7); 
 figure,imshow(im2);

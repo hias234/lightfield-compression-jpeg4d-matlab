@@ -1,6 +1,8 @@
-function decompressed = decompress(compressed, huffdict, T,S,c,U,V)
+function decompressed = decompress(compressed, huffdict, T,S,c,U,V, useYuvConversion, useHuffman)
     % decompresses a lightfield :)
-    %compressed = huffmandeco(compressed, huffdict);
+    if useHuffman
+        compressed = huffmandeco(compressed, huffdict);
+    end
     
     blocksize_st = 4;
     blocksize_uv = 2;
@@ -33,5 +35,8 @@ function decompressed = decompress(compressed, huffdict, T,S,c,U,V)
             end
         end
     end
-    decompressed = lfYuvToRgb(decompressed);
+    
+    if useYuvConversion
+        decompressed = lfYuvToRgb(decompressed);
+    end
 end
