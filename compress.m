@@ -1,4 +1,4 @@
-function [compressed, huffdict] = compress(LF, useYuvConversion, useRLE, useHuffman)
+function [compressed, huffdict] = compress(LF, quality, useYuvConversion, useRLE, useHuffman)
 % compresses a lightfield :)
     
     if useYuvConversion
@@ -11,6 +11,24 @@ function [compressed, huffdict] = compress(LF, useYuvConversion, useRLE, useHuff
     blocksize_uv = 2;
     
     compressed = [];
+    
+    % Standard JPEG quantization matrix
+    Q50 = double([  16 11 10 16 24 40 51 61;
+                    12 12 14 19 26 58 60 55;
+                    14 13 16 24 40 57 69 56;
+                    14 17 22 29 51 87 80 62; 
+                    18 22 37 56 68 109 103 77;
+                    24 35 55 64 81 104 113 92;
+                    49 64 78 87 103 121 120 101;
+                    72 92 95 98 112 100 103 99]);
+                
+    if quality > 50
+        QX = round(Q50.*(ones(8)*((100-quality)/50)));
+    elseif quality < 50
+        QX = round(Q50.*(ones(8)*(50/quality)));
+    elseif quality == 50
+        QX = Q50;
+    end
     
     for color=1:c
         LF_c = squeeze(LF(:,:,color,:,:));
@@ -29,7 +47,7 @@ function [compressed, huffdict] = compress(LF, useYuvConversion, useRLE, useHuff
                         
                         block4d = zeros(4,4,2,2);
                         block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1) = LF_c(t:t_to,s:s_to,u:u_to,v:v_to);
-                        compressed_block1d = compress_block4d(block4d);
+                        compressed_block1d = compress_block4d(block4d, QX);
                         
                         compressed = [compressed compressed_block1d];
                     end
