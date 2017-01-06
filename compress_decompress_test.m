@@ -1,18 +1,19 @@
 
 %% =1======================================================
 % load lightfield (the last parameter is a scaling factor for the spatial resolution)
-LF = ImportLF('./lightfields/legoknights-small_17x17/',17,[1,1],0.10);
+LF = ImportLF('./lightfields/legoknights-small_17x17/',17,[1,1],0.25);
 
 % size of lightfield (dimension order as it is being loaded: S,T,c,U,V
 [T,S,c,U,V] = size(LF);
 %% compress
 
+quality = 10;
 clc;
-[compressed_lf, huffdict] = compress(LF, false, false);
+[compressed_lf, huffdict] = compress(LF, quality, false, false);
 disp('compressed')
 %% decompress
 
-LF_dec = decompress(compressed_lf, huffdict, T, S, c, U, V, false, false);
+LF_dec = decompress(compressed_lf, huffdict, quality, T, S, c, U, V, false, false);
 disp('decompressed')
 
 max(max(max(max(max(LF-LF_dec)))))
