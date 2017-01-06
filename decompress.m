@@ -1,9 +1,11 @@
-function decompressed = decompress(compressed, huffdict, T,S,c,U,V, useYuvConversion, useHuffman)
+function decompressed = decompress(compressed, huffdict, T,S,c,U,V, useYuvConversion, useRLE, useHuffman)
     % decompresses a lightfield :)
     if useHuffman
         compressed = huffmandeco(compressed, huffdict);
     end
-    
+    if useRLE
+       compressed = rl_decode(compressed);
+    end
     blocksize_st = 4;
     blocksize_uv = 2;
     blocksize = blocksize_st*blocksize_st*blocksize_uv*blocksize_uv;

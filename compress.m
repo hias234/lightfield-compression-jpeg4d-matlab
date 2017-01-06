@@ -1,4 +1,4 @@
-function [compressed, huffdict] = compress(LF, useYuvConversion, useHuffman)
+function [compressed, huffdict] = compress(LF, useYuvConversion, useRLE, useHuffman)
 % compresses a lightfield :)
     
     if useYuvConversion
@@ -37,7 +37,9 @@ function [compressed, huffdict] = compress(LF, useYuvConversion, useHuffman)
             end
         end
     end
-    
+    if useRLE
+        compressed = rl_encode(compressed);
+    end
     if useHuffman
         [compressed, huffdict] = huffman_encode(compressed);
     else
