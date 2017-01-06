@@ -9,11 +9,12 @@ LF = ImportLF('./lightfields/legoknights-small_17x17/',17,[1,1],1.0);
 
 quality = 20;
 clc;
-[compressed_lf, huffdict] = compress(LF, quality, false, false);
+
+[compressed_lf, huffdict] = compress(LF, quality, false, true, false);
 disp('compressed')
 %% decompress
 
-LF_dec = decompress(compressed_lf, huffdict, quality, T, S, c, U, V, false, false);
+LF_dec = decompress(compressed_lf, huffdict, quality, T, S, c, U, V, false, true, false);
 disp('decompressed')
 
 max(max(max(max(max(LF-LF_dec)))))
