@@ -47,7 +47,7 @@ for pos=1:length(block1d)
     shortened_block1d(pos) = block2d(row,col);
 end
 
-shortened_block1d = shortened_block1d(1:64);
+shortened_block1d = shortened_block1d(1:length(block1d));
 
 end
 

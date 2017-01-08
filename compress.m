@@ -22,6 +22,13 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
                 72 92 95 98 112 100 103 99]);
     if blocksize == 256
         Q50 = repelem(Q50, 2, 2); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 1.4;
+        disp(Q50)
+    end
+    if blocksize == 1024
+        Q50 = repelem(Q50, 4, 4); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 2;
+        disp(Q50)
     end
                 
 %      Q50 = double([ 16 16 11 11 10 10 16 16 24 24 40 40 51 51 61 61;
