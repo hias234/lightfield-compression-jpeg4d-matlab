@@ -1,4 +1,4 @@
-function decompressed_block = decompress_block4d(block1d, QX)
+function decompressed_block = decompress_block4d(block1d, blocksize_st, blocksize_uv, QX)
 % decompresses a 4d-block 
 
     % block2d = reshape(block1d, [8,8]); % TODO this may needs to be changed... DOMINIK
@@ -10,6 +10,6 @@ function decompressed_block = decompress_block4d(block1d, QX)
     
     block2d_idct = block2d_idct + 128; % reverse the shift done in compress
     
-    decompressed_block = map2dTo4d(block2d_idct, 4, 4, 2, 2); % TODO dimensions are hard coded...
+    decompressed_block = map2dTo4d(block2d_idct, blocksize_st, blocksize_st, blocksize_uv, blocksize_uv); % TODO dimensions are hard coded...
     decompressed_block = uint8(decompressed_block); % TODO maybe round before - has to be tested...
 end

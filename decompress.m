@@ -1,4 +1,4 @@
-function decompressed = decompress(compressed, huffdict, quality, T,S,c,U,V, useYuvConversion, useRLE, useHuffman)
+function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffdict, quality, T,S,c,U,V, useYuvConversion, useRLE, useHuffman)
     % decompresses a lightfield :)
     if useHuffman
         compressed = huffmandeco(compressed, huffdict);
@@ -6,8 +6,7 @@ function decompressed = decompress(compressed, huffdict, quality, T,S,c,U,V, use
     if useRLE
        compressed = rl_decode(compressed);
     end
-    blocksize_st = 4;
-    blocksize_uv = 2;
+
     blocksize = blocksize_st*blocksize_st*blocksize_uv*blocksize_uv;
     
     decompressed = zeros(T,S,c,U,V,'uint8');
@@ -21,11 +20,14 @@ function decompressed = decompress(compressed, huffdict, quality, T,S,c,U,V, use
                     24 35 55 64 81 104 113 92;
                     49 64 78 87 103 121 120 101;
                     72 92 95 98 112 100 103 99]);
-                
+    if blocksize == 256
+        Q50 = repelem(Q50, 2, 2); %repeat quantization matrix elements to match blocksize
+    end
+    
     if quality > 50
-        QX = round(Q50.*(ones(8)*((100-quality)/50)));
+        QX = round(Q50.*(ones(size(Q50, 1))*((100-quality)/50)));
     elseif quality < 50
-        QX = round(Q50.*(ones(8)*(50/quality)));
+        QX = round(Q50.*(ones(size(Q50, 1))*(50/quality)));
     elseif quality == 50
         QX = Q50;
     end
@@ -43,9 +45,8 @@ function decompressed = decompress(compressed, huffdict, quality, T,S,c,U,V, use
                 
                     for v=1:blocksize_uv:V
                         v_to=min([v+blocksize_uv-1, V]);
-                        
                         compressed_block1d = compressed(index:index+blocksize-1);
-                        decompressed_block4d = decompress_block4d(compressed_block1d, QX);
+                        decompressed_block4d = decompress_block4d(compressed_block1d, blocksize_st, blocksize_uv, QX);
                         
                         decompressed(t:t_to,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
                         

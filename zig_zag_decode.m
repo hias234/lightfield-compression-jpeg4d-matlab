@@ -11,7 +11,6 @@ dir = -1;
 output_block2d = zeros(len1d,len1d);
 
 for pos=1:length(input_block1d)
-    
     row = row + dir;
     col = col - dir;
     
