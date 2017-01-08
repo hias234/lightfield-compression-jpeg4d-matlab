@@ -2,7 +2,7 @@ function compressed_block = compress_block4d(block4d, QX)
 % compresses a 4d-block 
 % QX - quantization matrix
 % right now the block4d has to have a size of 64 - this should be
-% adaptable!!! - DOMINIK :)
+% adaptable
     
     block2d = map4dTo2d(block4d); %map 4d-block to 2d
     block2d = double(block2d); % convert uint8 types to double
