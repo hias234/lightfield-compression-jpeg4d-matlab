@@ -34,7 +34,7 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
     end
     if blocksize == 6400
         Q50 = repelem(Q50, 10, 10); %repeat quantization matrix elements to match blocksize
-        Q50(1,1) = Q50(1,1) * 5.0;
+        Q50(1,1) = Q50(1,1) * 7.0;
     end
     
                 

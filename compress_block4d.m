@@ -18,6 +18,6 @@ function compressed_block = compress_block4d(block4d, QX)
         disp(block2d_zigzag(1))
     end
     
-    compressed_block = int8(round(block2d_zigzag));
+    compressed_block = int16(round(block2d_zigzag));
     
 end
