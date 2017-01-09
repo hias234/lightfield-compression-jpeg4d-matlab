@@ -1,8 +1,7 @@
 
 %% =1======================================================
 % load lightfield (the last parameter is a scaling factor for the spatial resolution)
-LF = ImportLF('./lightfields/sintel_cave_entrance_512_19x19/',19,[1,1],0.25);
-
+LF = ImportLF('./lightfields/legoknights-small_17x17/', 17,[1,1],0.1);
 % size of lightfield (dimension order as it is being loaded: S,T,c,U,V
 [T,S,c,U,V] = size(LF);
 %% compress
