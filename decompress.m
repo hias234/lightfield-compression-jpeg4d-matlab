@@ -28,7 +28,15 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
     end
     if blocksize == 1024
         Q50 = repelem(Q50, 4, 4); %repeat quantization matrix elements to match blocksize
-        Q50(1,1) = Q50(1,1) * 2;
+        Q50(1,1) = Q50(1,1) * 2.0;
+    end
+    if blocksize == 4096
+        Q50 = repelem(Q50, 8, 8); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 4.0;
+    end
+    if blocksize == 6400
+        Q50 = repelem(Q50, 10, 10); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 5.0;
     end
     
     if quality > 50
