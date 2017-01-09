@@ -1,11 +1,12 @@
 function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quality, useYuvConversion, useRLE, useHuffman)
 % compresses a lightfield :)
     
-    if useYuvConversion
-        LF = lfRgbToYuv(LF);
-    end
     % size of lightfield (dimension order as it is being loaded: S,T,c,U,V
     [T,S,c,U,V] = size(LF);
+    
+    if useYuvConversion
+        LF = lfRgbToYuv(LF,T,S,U,V);
+    end
     
     compressed = [];
     
@@ -51,11 +52,15 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
         T_c = T;
         S_c = S;
         
-        %if c > 1
-        %    LF_c = LF_c(1:2:T,1:2:S,color,:,:);
-        %    T_c = T / 2;
-        %    S_c = S / 2;
-        %end
+        if c > 1
+            if c == 1
+                LF_c = LF_c(1:2:T,1:2:S,:,:);
+            else
+                LF_c = LF_c(1:2:T,1:2:S,:,:);
+            end
+            T_c = T / 2;
+            S_c = S / 2;
+        end
         
         for t=1:blocksize_st:T_c
             t_to=min([t+blocksize_st-1, T_c]);

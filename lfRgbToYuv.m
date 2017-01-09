@@ -1,4 +1,4 @@
-function lf_yuv = lfRgbToYuv(LF)
+function lf_yuv = lfRgbToYuv(LF,TD,SD,UD,VD)
 
     R = double(LF(:,:,1,:,:)); %double??? http://stackoverflow.com/questions/19555372/convert-rgb-image-to-yuv-and-convert-back-in-matlab
     G = double(LF(:,:,2, :, :)); 
@@ -7,8 +7,8 @@ function lf_yuv = lfRgbToYuv(LF)
     U = -0.14713 * R - 0.28886 * G + 0.436 * B;
     V = 0.615 * R - 0.51499 * G - 0.10001 * B;
     
-    U = U + ones(52,52,1,17,17)*80;
-    V = V + ones(52,52,1,17,17)*50;
+    U = U + ones(TD,SD,1,UD,VD)*80;
+    V = V + ones(TD,SD,1,UD,VD)*50;
 %     Y(Y>255) = 255;
 %     U(U>255) = 255;
 %     V(V>255) = 255;
