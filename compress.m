@@ -53,13 +53,14 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
         S_c = S;
         
         if c > 1
-            if c == 1
-                LF_c = LF_c(1:2:T,1:2:S,:,:);
+            %LF_c = LF_c(1:2:T,:,:,:);
+            if c == 2
+                LF_c = LF_c(1:2:T,:,:,:);
             else
-                LF_c = LF_c(1:2:T,1:2:S,:,:);
+                LF_c = LF_c(2:2:T,:,:,:);
             end
             T_c = T / 2;
-            S_c = S / 2;
+            %S_c = S / 2;
         end
         
         for t=1:blocksize_st:T_c

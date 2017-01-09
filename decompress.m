@@ -55,7 +55,7 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
         skip_factor = 1;
          if c > 1
             T_c = T / 2;
-            S_c = S / 2;
+            %S_c = S / 2;
             skip_factor = 2;
          end
         
@@ -65,7 +65,7 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
             
             for s=1:blocksize_st:S_c
                 s_to=min([s+blocksize_st-1, S_c]);
-                s_to_skip=min([(s+blocksize_st)*skip_factor-1, S]);
+                %s_to_skip=min([(s+blocksize_st)*skip_factor-1, S]);
             
                 for u=1:blocksize_uv:U
                     u_to=min([u+blocksize_uv-1, U]);
@@ -78,10 +78,10 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
                         if c == 1
                             decompressed(t:t_to,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1);
                         else
-                            decompressed(t*skip_factor:2:t_to_skip,s*skip_factor:2:s_to_skip,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
-                            decompressed(t*skip_factor-1:2:t_to_skip-1,s*skip_factor-1:2:s_to_skip-1,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
-                            decompressed(t*skip_factor-1:2:t_to_skip-1,s*skip_factor:2:s_to_skip,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
-                            decompressed(t*skip_factor:2:t_to_skip,s*skip_factor-1:2:s_to_skip-1,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                            decompressed(t*skip_factor:2:t_to_skip,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                            decompressed(t*skip_factor-1:2:t_to_skip-1,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                            %decompressed(t*skip_factor-1:2:t_to_skip-1,s*skip_factor:2:s_to_skip,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                            %decompressed(t*skip_factor:2:t_to_skip,s*skip_factor-1:2:s_to_skip-1,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
                         end
                         
                         index = index+blocksize;
