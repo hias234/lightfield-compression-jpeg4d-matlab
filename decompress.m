@@ -29,7 +29,15 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
     end
     if blocksize == 1024
         Q50 = repelem(Q50, 4, 4); %repeat quantization matrix elements to match blocksize
-        Q50(1,1) = Q50(1,1) * 2;
+        Q50(1,1) = Q50(1,1) * 2.0;
+    end
+    if blocksize == 4096
+        Q50 = repelem(Q50, 8, 8); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 4.0;
+    end
+    if blocksize == 6400
+        Q50 = repelem(Q50, 10, 10); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 7.0;
     end
     
     if quality > 50
@@ -42,11 +50,18 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
     
     index = 1;
     for color=1:c
-        for t=1:blocksize_st:T
-            t_to=min([t+blocksize_st-1, T]);
+        T_c = T;
+        S_c = S;
+        %if c > 1
+        %    T_c = T / 2;
+        %    S_c = S / 2;
+        %end
+        
+        for t=1:blocksize_st:T_c
+            t_to=min([t+blocksize_st-1, T_c]);
             
-            for s=1:blocksize_st:S
-                s_to=min([s+blocksize_st-1, S]);
+            for s=1:blocksize_st:S_c
+                s_to=min([s+blocksize_st-1, S_c]);
             
                 for u=1:blocksize_uv:U
                     u_to=min([u+blocksize_uv-1, U]);
@@ -56,7 +71,11 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
                         compressed_block1d = compressed(index:index+blocksize-1);
                         decompressed_block4d = decompress_block4d(compressed_block1d, blocksize_st, blocksize_uv, QX);
                         
+                        %if c == 1
                         decompressed(t:t_to,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                        %else
+                            
+                        %end
                         
                         index = index+blocksize;
                     end

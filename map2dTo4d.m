@@ -1,6 +1,7 @@
 function block4d = map2dTo4d(block2d, T, S, U, V)
 % maps a 4-dimensional block to a 2-dimensional one
 
+    % block4d = reshape(block2d(:)', [T,S,U,V]);
     block4d = zeros(T,S,U,V);
 
     for t=0:T-1

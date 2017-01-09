@@ -6,6 +6,22 @@ function lf_yuv = lfRgbToYuv(LF)
     Y = 0.299 * R + 0.587 * G + 0.114 * B;
     U = -0.14713 * R - 0.28886 * G + 0.436 * B;
     V = 0.615 * R - 0.51499 * G - 0.10001 * B;
+    
+    U = U + ones(52,52,1,17,17)*80;
+    V = V + ones(52,52,1,17,17)*50;
+%     Y(Y>255) = 255;
+%     U(U>255) = 255;
+%     V(V>255) = 255;
+%     Y(Y<0) = 0;
+%     U(U<0) = 0;
+%     V(V<0) = 0;
+
+    disp(max(max(max(max(max((Y)))))))
+    disp(max(max(max(max(max((U)))))))
+    disp(max(max(max(max(max((V)))))))
+    disp(min(min(min(min(min((Y)))))))
+    disp(min(min(min(min(min((U)))))))
+    disp(min(min(min(min(min((V)))))))
     lf_yuv = cat(3,Y,U,V); 
     
     %Code unterhalb mit normalem bild funktioniert 

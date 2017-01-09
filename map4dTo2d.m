@@ -3,6 +3,8 @@ function block2d = map4dTo2d(block4d)
 
     [T, S, U, V] = size(block4d);
     
+    % block2d = reshape(block4d(:)', [S*U,T*V]);
+    
     block2d = zeros(S*U,T*V);
     
     for t=0:T-1

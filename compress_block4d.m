@@ -14,6 +14,10 @@ function compressed_block = compress_block4d(block4d, QX)
     
     block2d_zigzag = zig_zag_encode(block2d_quantized);
     
-    compressed_block = int8(round(block2d_zigzag));
+    if block2d_zigzag(1) < -128 || block2d_zigzag(1) > 128
+        disp(block2d_zigzag(1))
+    end
+    
+    compressed_block = int16(round(block2d_zigzag));
     
 end

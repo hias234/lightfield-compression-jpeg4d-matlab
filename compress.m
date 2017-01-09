@@ -23,14 +23,20 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
     if blocksize == 256
         Q50 = repelem(Q50, 2, 2); %repeat quantization matrix elements to match blocksize
         Q50(1,1) = Q50(1,1) * 1.4;
-        %Q50(8:16, 8:16) = Q50(8:16, 8:16) .* 1.4;
     end
     if blocksize == 1024
         Q50 = repelem(Q50, 4, 4); %repeat quantization matrix elements to match blocksize
-        Q50(1,1) = Q50(1,1) * 2;
+        Q50(1,1) = Q50(1,1) * 2.0;
+    end
+    if blocksize == 4096
+        Q50 = repelem(Q50, 8, 8); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 4.0;
+    end
+    if blocksize == 6400
+        Q50 = repelem(Q50, 10, 10); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 7.0;
     end
     disp(Q50)
-
                 
     if quality > 50
         QX = round(Q50.*(ones(size(Q50, 1))*((100-quality)/50)));
@@ -42,12 +48,20 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
     
     for color=1:c
         LF_c = squeeze(LF(:,:,color,:,:));
+        T_c = T;
+        S_c = S;
         
-        for t=1:blocksize_st:T
-            t_to=min([t+blocksize_st-1, T]);
+        %if c > 1
+        %    LF_c = LF_c(1:2:T,1:2:S,color,:,:);
+        %    T_c = T / 2;
+        %    S_c = S / 2;
+        %end
+        
+        for t=1:blocksize_st:T_c
+            t_to=min([t+blocksize_st-1, T_c]);
             
-            for s=1:blocksize_st:S
-                s_to=min([s+blocksize_st-1, S]);
+            for s=1:blocksize_st:S_c
+                s_to=min([s+blocksize_st-1, S_c]);
             
                 for u=1:blocksize_uv:U
                     u_to=min([u+blocksize_uv-1, U]);
