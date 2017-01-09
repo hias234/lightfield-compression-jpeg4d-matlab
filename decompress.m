@@ -52,10 +52,10 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
     for color=1:c
         T_c = T;
         S_c = S;
-        if c > 1
-            T_c = T / 2;
-            S_c = S / 2;
-        end
+        %if c > 1
+        %    T_c = T / 2;
+        %    S_c = S / 2;
+        %end
         
         for t=1:blocksize_st:T_c
             t_to=min([t+blocksize_st-1, T_c]);
@@ -71,11 +71,11 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
                         compressed_block1d = compressed(index:index+blocksize-1);
                         decompressed_block4d = decompress_block4d(compressed_block1d, blocksize_st, blocksize_uv, QX);
                         
-                        if c == 1
-                            decompressed(t:t_to,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
-                        else
+                        %if c == 1
+                        decompressed(t:t_to,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                        %else
                             
-                        end
+                        %end
                         
                         index = index+blocksize;
                     end

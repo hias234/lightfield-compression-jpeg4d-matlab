@@ -15,7 +15,7 @@ blocksize_st = 4;
 blocksize_uv = 4;
 use_colorspace_conversion = true;
 use_rle = true;
-use_huffman = true;
+use_huffman = false;
 clc;
 
 [compressed_lf, huffdict] = compress(LF, blocksize_st, blocksize_uv, quality, use_colorspace_conversion, use_rle, use_huffman);
