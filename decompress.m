@@ -24,7 +24,8 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
                     72 92 95 98 112 100 103 99]);
     if blocksize == 256
         Q50 = repelem(Q50, 2, 2); %repeat quantization matrix elements to match blocksize
-        Q50(1,1) = Q50(1,1) * 1.4;
+        Q50(1, 1) = Q50(1, 1) * 1.4;
+        %Q50(8:16, 8:16) = 255;
     end
     if blocksize == 1024
         Q50 = repelem(Q50, 4, 4); %repeat quantization matrix elements to match blocksize
@@ -60,13 +61,6 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
                 
                     for v=1:blocksize_uv:V
                         v_to=min([v+blocksize_uv-1, V]);
-                        if index+blocksize-1 >= length(compressed)
-                            disp(v)
-                            disp(u)
-                            disp(s)
-                            disp(t)
-                            disp(index)
-                        end
                         compressed_block1d = compressed(index:index+blocksize-1);
                         decompressed_block4d = decompress_block4d(compressed_block1d, blocksize_st, blocksize_uv, QX);
                         
