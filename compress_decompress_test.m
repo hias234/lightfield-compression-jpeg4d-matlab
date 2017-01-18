@@ -14,7 +14,7 @@ quality = 50;
 blocksize_st = 4;
 blocksize_uv = 2;
 use_colorspace_conversion = true;
-use_rle = false;
+use_rle = true;
 use_huffman = false;
 use_subsampling_t = true;
 clc;
@@ -33,8 +33,11 @@ disp('decompressed')
 max(max(max(max(max(LF-LF_dec)))))
 nnz(compressed_lf)
 
-similarity = compareLFs(LF, LF_dec)
-
+if(use_huffman)
+    compression_result = compareLFs(LF, LF_dec, size(compressed_lf, 2) / 8)
+elseif(isa(compressed_lf(1),'double'))
+    compression_result = compareLFs(LF, LF_dec, size(compressed_lf, 2))
+end
 im = RenderLF(LF_dec,0.25,2,-7,-7); 
 figure,imshow(im);
 title('comp image rendered from lightfield');

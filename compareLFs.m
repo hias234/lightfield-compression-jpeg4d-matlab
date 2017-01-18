@@ -1,4 +1,4 @@
-function [ similarity_result ] = compareLFs(LF1, LF2)
+function [ compression_result ] = compareLFs(LF1, LF2, lf2CompressedSizeInBytes)
 %COMPARELFS Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -15,6 +15,8 @@ function [ similarity_result ] = compareLFs(LF1, LF2)
         end
      end
 
-     similarity_result = qssimSum / (U * V);
+     compressionFactor = (T * S * c * U * V) / lf2CompressedSizeInBytes;
+     
+     compression_result = (qssimSum / (U * V)) * compressionFactor;
 end
 
