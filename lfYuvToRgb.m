@@ -1,12 +1,12 @@
-function lf_rgb = lfYuvToRgb(lf_yuv)
+function lf_rgb = lfYuvToRgb(lf_yuv,TD,SD,UD,VD)
 
     Y = double(lf_yuv(:,:,1,:,:)); 
     U = double(lf_yuv(:,:,2,:,:)); 
     V = double(lf_yuv(:,:,3,:,:)); 
     
-    
-    U = U - ones(128,128,1,17,17)*80;
-    V = V - ones(128,128,1,17,17)*50;
+
+    U = U - ones(TD,SD,1,UD,VD)*80;
+    V = V - ones(TD,SD,1,UD,VD)*50;
     
     R = Y + 1.139834576 * V;
     G = Y -.3946460533 * U -.58060 * V;
