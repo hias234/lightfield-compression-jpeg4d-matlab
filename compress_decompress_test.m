@@ -12,20 +12,21 @@ LF = ImportLF('./lightfields/legoknights-small_17x17/',17,[1,1],0.25);
 
 quality = 50;
 blocksize_st = 4;
-blocksize_uv = 6;
+blocksize_uv = 4;
 use_colorspace_conversion = true;
 use_rle = false;
 use_huffman = false;
 use_subsampling_t = true;
+use_subsampling_s = true;
 clc;
 
 disp('start compressing')
-[compressed_lf, huffdict] = compress(LF, blocksize_st, blocksize_uv, quality, use_colorspace_conversion, use_subsampling_t, use_rle, use_huffman);
+[compressed_lf, huffdict] = compress(LF, blocksize_st, blocksize_uv, quality, use_colorspace_conversion, use_subsampling_t, use_subsampling_s, use_rle, use_huffman);
 disp('compressed')
 %% decompress
 
 disp('start decompressing')
-LF_dec = decompress(compressed_lf, blocksize_st, blocksize_uv, huffdict, quality, T, S, c, U, V, use_colorspace_conversion, use_subsampling_t, use_rle, use_huffman);
+LF_dec = decompress(compressed_lf, blocksize_st, blocksize_uv, huffdict, quality, T, S, c, U, V, use_colorspace_conversion, use_subsampling_t, use_subsampling_s, use_rle, use_huffman);
 disp('decompressed')
 
 max(max(max(max(max(LF-LF_dec)))))

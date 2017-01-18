@@ -1,4 +1,4 @@
-function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffdict, quality, T,S,c,U,V, useYuvConversion, use_subsampling_t, useRLE, useHuffman)
+function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffdict, quality, T,S,c,U,V, useYuvConversion, use_subsampling_t, use_subsampling_s, useRLE, useHuffman)
     % decompresses a lightfield :)
     if useHuffman
         compressed = huffmandeco(compressed, huffdict);
@@ -60,20 +60,24 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
     for color=1:c
         T_c = T;
         S_c = S;
-        skip_factor = 1;
+        skip_factor_t = 1;
+        skip_factor_s = 1;
          if use_subsampling_t && c > 1
             T_c = T / 2;
-            %S_c = S / 2;
-            skip_factor = 2;
+            skip_factor_t = 2;
+         end
+         if use_subsampling_s && c > 1
+            S_c = S / 2;
+            skip_factor_s = 2;
          end
         
         for t=1:blocksize_st:T_c
             t_to=min([t+blocksize_st-1, T_c]);
-            t_to_skip=min([(t+blocksize_st)*skip_factor-1, T]);
+            t_to_skip=min([(t+blocksize_st)*skip_factor_t-1, T]);
             
             for s=1:blocksize_st:S_c
                 s_to=min([s+blocksize_st-1, S_c]);
-                %s_to_skip=min([(s+blocksize_st)*skip_factor-1, S]);
+                s_to_skip=min([(s+blocksize_st)*skip_factor_s-1, S]);
             
                 for u=1:blocksize_uv:U
                     u_to=min([u+blocksize_uv-1, U]);
@@ -83,11 +87,25 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
                         compressed_block1d = compressed(index:index+blocksize-1);
                         decompressed_block4d = decompress_block4d(compressed_block1d, blocksize_st, blocksize_uv, QX);
                         
-                        if c == 1 || use_subsampling_t == false
+                        if c == 1 || (use_subsampling_t == false && use_subsampling_s == false)
                             decompressed(t:t_to,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1);
                         else
-                            decompressed(t*skip_factor:2:t_to_skip,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
-                            decompressed(t*skip_factor-1:2:t_to_skip-1,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                            if use_subsampling_t && use_subsampling_s == false
+                                decompressed(t*skip_factor_t:skip_factor_t:t_to_skip,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                                decompressed(t*skip_factor_t-1:skip_factor_t:t_to_skip-1,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                            end
+                            if use_subsampling_s && use_subsampling_t == false
+                                %disp(s_to-s)
+                                %disp((s_to_skip-2*s)/2)
+                                decompressed(t:t_to,s*skip_factor_s:skip_factor_s:s_to_skip,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                                decompressed(t:t_to,s*skip_factor_s-1:skip_factor_s:s_to_skip-1,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                            end
+                            if use_subsampling_s && use_subsampling_t
+                                decompressed(t*skip_factor_t:skip_factor_t:t_to_skip,s*skip_factor_s:skip_factor_s:s_to_skip,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                                decompressed(t*skip_factor_t-1:skip_factor_t:t_to_skip-1,s*skip_factor_s-1:skip_factor_s:s_to_skip-1,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                                decompressed(t*skip_factor_t-1:skip_factor_t:t_to_skip-1,s*skip_factor_s:skip_factor_s:s_to_skip,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                                decompressed(t*skip_factor_t:skip_factor_t:t_to_skip,s*skip_factor_s-1:skip_factor_s:s_to_skip-1,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
+                            end
                             %decompressed(t*skip_factor-1:2:t_to_skip-1,s*skip_factor:2:s_to_skip,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
                             %decompressed(t*skip_factor:2:t_to_skip,s*skip_factor-1:2:s_to_skip-1,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
                         end
