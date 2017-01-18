@@ -1,4 +1,4 @@
-function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quality, useYuvConversion, use_subsampling_t, useRLE, useHuffman)
+function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quality, useYuvConversion, use_subsampling_t, use_subsampling_s, useRLE, useHuffman)
 % compresses a lightfield :)
     
     % size of lightfield (dimension order as it is being loaded: S,T,c,U,V
@@ -67,6 +67,10 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
             LF_c = LF_c(1:2:T,:,:,:);
             T_c = T / 2;
             %S_c = S / 2;
+        end
+        if use_subsampling_s && c > 1
+            LF_c = LF_c(:,1:2:S,:,:);
+            S_c = S / 2;
         end
         
         for t=1:blocksize_st:T_c
