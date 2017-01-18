@@ -1,4 +1,4 @@
-function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quality, useYuvConversion, useRLE, useHuffman)
+function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quality, useYuvConversion, use_subsampling_t, useRLE, useHuffman)
 % compresses a lightfield :)
     
     % size of lightfield (dimension order as it is being loaded: S,T,c,U,V
@@ -25,6 +25,10 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
         Q50 = repelem(Q50, 2, 2); %repeat quantization matrix elements to match blocksize
         Q50(1,1) = Q50(1,1) * 1.4;
     end
+    if blocksize == 576
+        Q50 = repelem(Q50, 3, 3); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 3;
+    end
     if blocksize == 1024
         Q50 = repelem(Q50, 4, 4); %repeat quantization matrix elements to match blocksize
         Q50(1,1) = Q50(1,1) * 2.0;
@@ -37,6 +41,11 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
         Q50 = repelem(Q50, 10, 10); %repeat quantization matrix elements to match blocksize
         Q50(1,1) = Q50(1,1) * 7.0;
     end
+    if blocksize == 2304
+        Q50 = repelem(Q50, 6, 6); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 6.0;
+    end
+    
     disp(Q50)
                 
     if quality > 50
@@ -52,13 +61,8 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
         T_c = T;
         S_c = S;
         
-        if c > 1
-            %LF_c = LF_c(1:2:T,:,:,:);
-            if c == 2
-                LF_c = LF_c(1:2:T,:,:,:);
-            else
-                LF_c = LF_c(2:2:T,:,:,:);
-            end
+        if use_subsampling_t && c > 1
+            LF_c = LF_c(1:2:T,:,:,:);
             T_c = T / 2;
             %S_c = S / 2;
         end

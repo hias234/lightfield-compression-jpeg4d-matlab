@@ -1,10 +1,10 @@
-function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffdict, quality, T,S,c,U,V, useYuvConversion, useRLE, useHuffman)
+function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffdict, quality, T,S,c,U,V, useYuvConversion, use_subsampling_t, useRLE, useHuffman)
     % decompresses a lightfield :)
     if useHuffman
         compressed = huffmandeco(compressed, huffdict);
     end
     if useRLE
-       compressed = rl_decode(compressed);
+        compressed = rl_decode(compressed);
     end
 
     blocksize = blocksize_st*blocksize_st*blocksize_uv*blocksize_uv;
@@ -27,6 +27,10 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
         Q50(1, 1) = Q50(1, 1) * 1.4;
         %Q50(8:16, 8:16) = 255;
     end
+    if blocksize == 576
+        Q50 = repelem(Q50, 3, 3); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 3;
+    end
     if blocksize == 1024
         Q50 = repelem(Q50, 4, 4); %repeat quantization matrix elements to match blocksize
         Q50(1,1) = Q50(1,1) * 2.0;
@@ -38,6 +42,10 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
     if blocksize == 6400
         Q50 = repelem(Q50, 10, 10); %repeat quantization matrix elements to match blocksize
         Q50(1,1) = Q50(1,1) * 7.0;
+    end
+    if blocksize == 2304
+        Q50 = repelem(Q50, 6, 6); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 4.0;
     end
     
     if quality > 50
@@ -53,7 +61,7 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
         T_c = T;
         S_c = S;
         skip_factor = 1;
-         if c > 1
+         if use_subsampling_t && c > 1
             T_c = T / 2;
             %S_c = S / 2;
             skip_factor = 2;
@@ -75,7 +83,7 @@ function decompressed = decompress(compressed, blocksize_st, blocksize_uv, huffd
                         compressed_block1d = compressed(index:index+blocksize-1);
                         decompressed_block4d = decompress_block4d(compressed_block1d, blocksize_st, blocksize_uv, QX);
                         
-                        if c == 1
+                        if c == 1 || use_subsampling_t == false
                             decompressed(t:t_to,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1);
                         else
                             decompressed(t*skip_factor:2:t_to_skip,s:s_to,color,u:u_to,v:v_to) = decompressed_block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1); % TODO
