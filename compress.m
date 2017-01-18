@@ -24,6 +24,10 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
         Q50 = repelem(Q50, 2, 2); %repeat quantization matrix elements to match blocksize
         Q50(1,1) = Q50(1,1) * 1.4;
     end
+    if blocksize == 576
+        Q50 = repelem(Q50, 3, 3); %repeat quantization matrix elements to match blocksize
+        Q50(1,1) = Q50(1,1) * 2;
+    end
     if blocksize == 1024
         Q50 = repelem(Q50, 4, 4); %repeat quantization matrix elements to match blocksize
         Q50(1,1) = Q50(1,1) * 2.0;
@@ -45,6 +49,8 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
     elseif quality == 50
         QX = Q50;
     end
+    
+    index = 1;
     
     for color=1:c
         LF_c = squeeze(LF(:,:,color,:,:));
@@ -73,12 +79,17 @@ function [compressed, huffdict] = compress(LF, blocksize_st, blocksize_uv, quali
                         block4d(1:t_to-t+1,1:s_to-s+1,1:u_to-u+1,1:v_to-v+1) = LF_c(t:t_to,s:s_to,u:u_to,v:v_to);
                         compressed_block1d = compress_block4d(block4d, QX);
                         
-                        compressed = [compressed compressed_block1d];
+                        
+                        compressed(index:(index + length(compressed_block1d) - 1)) = compressed_block1d;
+                        index = index + length(compressed_block1d);
                     end
                 end
             end
         end
     end
+    
+    compressed = compressed(1:index - 1);
+    
     if useRLE
         compressed = rl_encode(compressed);
     end

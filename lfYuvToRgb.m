@@ -5,8 +5,8 @@ function lf_rgb = lfYuvToRgb(lf_yuv)
     V = double(lf_yuv(:,:,3,:,:)); 
     
     
-    U = U - ones(52,52,1,17,17)*80;
-    V = V - ones(52,52,1,17,17)*50;
+    U = U - ones(128,128,1,17,17)*80;
+    V = V - ones(128,128,1,17,17)*50;
     
     R = Y + 1.139834576 * V;
     G = Y -.3946460533 * U -.58060 * V;

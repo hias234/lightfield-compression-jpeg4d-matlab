@@ -12,14 +12,16 @@ LF = ImportLF('./lightfields/legoknights-small_17x17/',17,[1,1],0.1);
 
 quality = 50;
 blocksize_st = 4;
-blocksize_uv = 4;
+blocksize_uv = 2;
 use_colorspace_conversion = true;
 use_rle = true;
 use_huffman = false;
 clc;
 
+tic
 [compressed_lf, huffdict] = compress(LF, blocksize_st, blocksize_uv, quality, use_colorspace_conversion, use_rle, use_huffman);
 disp('compressed')
+disp(toc);
 %% decompress
 
 LF_dec = decompress(compressed_lf, blocksize_st, blocksize_uv, huffdict, quality, T, S, c, U, V, use_colorspace_conversion, use_rle, use_huffman);
@@ -27,6 +29,8 @@ disp('decompressed')
 
 max(max(max(max(max(LF-LF_dec)))))
 nnz(compressed_lf)
+
+similarity = compareLFs(LF, LF_dec)
 
 im = RenderLF(LF_dec,0.25,2,-7,-7); 
 figure,imshow(im);
